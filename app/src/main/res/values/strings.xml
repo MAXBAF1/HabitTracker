@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Habits Tracker</string>
+    <string name="habit_edit_title">Редактирование привычки</string>
+    <string name="habit_name_hint">Название</string>
+    <string name="habit_desc_hint">Описание</string>
+    <string name="habit_cnt_hint">Количество выполнений</string>
+    <string name="habit_period_hint">Периодичность</string>
+    <string name="save_text">Сохранить</string>
+    <string name="cancel_text">Отмена</string>
+
+    <string name="desc">Описание</string>
+    <string name="priority">Приоритет</string>
+    <string name="type">Тип</string>
+    <string name="period">Периодичность</string>
+    <string name="color">Цвет</string>
+
+    <string name="type_good">Хорошая</string>
+    <string name="type_bad">Плохая</string>
+
+    <string name="home">Home</string>
+    <string name="inf">About as</string>
+
+    <string name="about_as">Максим Лепинских, разработано на курсе Doubletapp</string>
+</resources>
