@@ -9,6 +9,6 @@ sealed class EditEvent {
     data class ChangePriority(val priorityPos: Int) : EditEvent()
     data class ChangeFieldText(val type: FieldType, val text: String) : EditEvent()
     data class ChangeHabitType(val type: HabitType) : EditEvent()
-    data object ClickBtnSave : EditEvent()
-    data object ExitToHome : EditEvent()
+    object ClickBtnSave : EditEvent()
+    object ExitToHome : EditEvent()
 }
