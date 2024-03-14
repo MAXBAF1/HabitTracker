@@ -1,6 +1,5 @@
 package com.example.habitstracker.ui.screens.home
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +20,7 @@ import com.example.habitstracker.ui.screens.home.helpers.HabitAdapter
 import com.example.habitstracker.ui.screens.home.helpers.HabitDiffUtilCallback
 import com.example.habitstracker.ui.screens.home.models.HomeEvent
 import com.example.habitstracker.ui.screens.home.models.HomeViewState
+import com.example.habitstracker.utils.getSerializable
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         return binding.root
@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
+        val habit = getSerializable<Habit>(Constance.HABIT_KEY)
 
         HabitAdapter.onItemClick = {
             val bundle = bundleOf(Constance.HABIT_KEY to it)
@@ -48,23 +49,13 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.recyclerView.adapter = adapter
 
-        binding.fabAdd.setOnClickListener {
-            navController.navigate(R.id.editFragment)
-        }
-
-        val habit = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getSerializable(Constance.HABIT_KEY, Habit::class.java)
-        } else {
-            arguments?.getSerializable(Constance.HABIT_KEY) as Habit?
-        }
+        binding.fabAdd.setOnClickListener { navController.navigate(R.id.editFragment) }
 
         viewModel.obtainEvent(HomeEvent.RestoreHabits(habit))
         lifecycleScope.launch {
             viewModel.getViewState().collect { viewState ->
                 when (viewState) {
-                    is HomeViewState.HabitsRestored -> {
-                        updateHabits(viewState.habits)
-                    }
+                    is HomeViewState.HabitsRestored -> updateHabits(viewState.habits)
                 }
             }
         }

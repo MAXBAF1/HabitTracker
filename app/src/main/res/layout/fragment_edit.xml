@@ -153,153 +153,156 @@
                 android:layout_margin="8dp">
 
                 <HorizontalScrollView
+                    android:id="@+id/colorsScroll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <LinearLayout
+                        android:id="@+id/gradLinLay"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:background="@drawable/grad_bg"
                         android:orientation="horizontal">
 
                         <View
-                            android:id="@+id/aqua"
+                            android:id="@+id/square1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="18.75dp"
-                            android:background="@drawable/aqua"
+                            android:background="@drawable/square"
                             android:transitionName="#00FFFF" />
 
                         <View
-                            android:id="@+id/black"
+                            android:id="@+id/square2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="18.75dp"
-                            android:background="@drawable/black"
+                            android:background="@drawable/square"
                             android:transitionName="#000000" />
 
                         <View
-                            android:id="@+id/blue"
+                            android:id="@+id/square3"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
-                            android:background="@drawable/blue"
+                            android:background="@drawable/square"
                             android:transitionName="#0000FF" />
 
                         <View
-                            android:id="@+id/fuchsia"
+                            android:id="@+id/square4"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="0"
-                            android:background="@drawable/fuchsia"
+                            android:background="@drawable/square"
                             android:transitionName="#FF00FF" />
 
                         <View
-                            android:id="@+id/gray"
+                            android:id="@+id/square5"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/gray"
+                            android:background="@drawable/square"
                             android:transitionName="#808080" />
 
                         <View
-                            android:id="@+id/green"
+                            android:id="@+id/square6"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/green"
+                            android:background="@drawable/square"
                             android:transitionName="#008000" />
 
                         <View
-                            android:id="@+id/lime"
+                            android:id="@+id/square7"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/lime"
+                            android:background="@drawable/square"
                             android:transitionName="#00FF00" />
 
                         <View
-                            android:id="@+id/maroon"
+                            android:id="@+id/square8"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/maroon"
+                            android:background="@drawable/square"
                             android:transitionName="#800000" />
 
                         <View
-                            android:id="@+id/navy"
+                            android:id="@+id/square9"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/navy"
+                            android:background="@drawable/square"
                             android:transitionName="#000080" />
 
                         <View
-                            android:id="@+id/olive"
+                            android:id="@+id/square10"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/olive"
+                            android:background="@drawable/square"
                             android:transitionName="#808000" />
 
                         <View
-                            android:id="@+id/purple"
+                            android:id="@+id/square11"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/purple"
+                            android:background="@drawable/square"
                             android:transitionName="#800080" />
 
                         <View
-                            android:id="@+id/red"
+                            android:id="@+id/square12"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/red"
+                            android:background="@drawable/square"
                             android:transitionName="#FF0000" />
 
                         <View
-                            android:id="@+id/silver"
+                            android:id="@+id/square13"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/silver"
+                            android:background="@drawable/square"
                             android:transitionName="#C0C0C0" />
 
                         <View
-                            android:id="@+id/teal"
+                            android:id="@+id/square14"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/teal"
+                            android:background="@drawable/square"
                             android:transitionName="#008080" />
 
                         <View
-                            android:id="@+id/white"
+                            android:id="@+id/square15"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/white"
+                            android:background="@drawable/square"
                             android:transitionName="#FFFFFF" />
 
                         <View
-                            android:id="@+id/yellow"
+                            android:id="@+id/square16"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:layout_margin="18.75dp"
                             android:layout_weight="1"
-                            android:background="@drawable/yellow"
+                            android:background="@drawable/square"
                             android:transitionName="#FFFF00" />
 
                     </LinearLayout>

@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.update
 
 class HomeViewModel : BaseViewModel<HomeViewState, HomeEvent>(initialState = HomeViewState.HabitsRestored()) {
     private val habits: ArrayList<Habit> = arrayListOf()
-
     override fun obtainEvent(viewEvent: HomeEvent) {
         when (viewEvent) {
             is HomeEvent.RestoreHabits -> {

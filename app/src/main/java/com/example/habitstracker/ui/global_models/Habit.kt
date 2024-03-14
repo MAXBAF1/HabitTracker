@@ -8,6 +8,7 @@ data class Habit(
     var priorityPos: Int,
     var type: HabitType,
     var period: String,
-    var color: String,
+    var repeatCnt: String,
+    var color: Int,
     val id: UUID = UUID.randomUUID(),
 ) : java.io.Serializable

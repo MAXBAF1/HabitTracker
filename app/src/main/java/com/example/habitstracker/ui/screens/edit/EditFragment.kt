@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.HorizontalScrollView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -40,16 +42,10 @@ class EditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
         habit = getSerializable(Constance.HABIT_KEY)
+        arguments?.clear()
 
         initPriorities(onPrioritySelected = { viewModel.obtainEvent(EditEvent.ChangePriority(it)) })
         onClickColor(onClick = { viewModel.obtainEvent(EditEvent.ChangeColor(it)) })
-
-        binding.btnCancel.setOnClickListener { navController.popBackStack() }
-        binding.btnSave.setOnClickListener {
-            viewModel.obtainEvent(EditEvent.onBtnSaveClick)
-            val bundle = bundleOf(Constance.HABIT_KEY to getHabit())
-            navController.navigate(R.id.homeFragment, bundle)
-        }
 
         binding.edHabitName.addTextChangedListener {
             viewModel.obtainEvent(EditEvent.ChangeFieldText(FieldType.Name, it.toString()))
@@ -63,29 +59,48 @@ class EditFragment : Fragment() {
         binding.edHabitPeriod.addTextChangedListener {
             viewModel.obtainEvent(EditEvent.ChangeFieldText(FieldType.Period, it.toString()))
         }
-        binding.rgType.setOnCheckedChangeListener { rg, i ->
-            val type = if (i == R.id.rbGood) {
-                HabitType.Good
-            } else HabitType.Bad
+        binding.rgType.setOnCheckedChangeListener { _, i ->
+            val type = if (i == R.id.rbGood) HabitType.Good else HabitType.Bad
             viewModel.obtainEvent(EditEvent.ChangeHabitType(type))
         }
+        binding.btnCancel.setOnClickListener { navController.popBackStack() }
+        binding.btnSave.setOnClickListener { viewModel.obtainEvent(EditEvent.ClickBtnSave) }
 
-        viewModel.obtainEvent(EditEvent.RestoreEdits(habit))
+        navController.addOnDestinationChangedListener { _, navDestination, _ ->
+            if (navDestination.id == R.id.homeFragment && habit != null) {
+                viewModel.obtainEvent(EditEvent.ExitToHome)
+                habit = null
+            }
+        }
+
+        viewModel.obtainEvent(
+            EditEvent.RestoreEdits(
+                habit ?: Habit("", "", 0, HabitType.Good, "", "", Color.BLACK), habit != null
+            )
+        )
         lifecycleScope.launch {
             viewModel.getViewState().collect { viewState ->
                 when (viewState) {
-                    is EditViewState.HabitsRestored -> habit?.let { initEdition(it) }
+                    is EditViewState.HabitRestored -> viewState.habit?.let { initEdits(it) }
+                    is EditViewState.HabitSaved -> {
+                        val bundle = bundleOf(Constance.HABIT_KEY to viewState.habit)
+                        navController.navigate(R.id.homeFragment, bundle)
+                    }
                 }
             }
         }
     }
 
-    private fun initEdition(habit: Habit) = with(binding) {
+    private fun initEdits(habit: Habit) = with(binding) {
         edHabitName.setText(habit.habitName)
         edDesc.setText(habit.desc)
         spPriority.setSelection(habit.priorityPos)
         edHabitPeriod.setText(habit.period)
-        color.setBackgroundColor(Color.parseColor(habit.color))
+        color.setBackgroundColor(habit.color)
+        when (habit.type) {
+            HabitType.Good -> rgType.check(R.id.rbGood)
+            HabitType.Bad -> rgType.check(R.id.rbBad)
+        }
     }
 
     private fun initPriorities(onPrioritySelected: (Int) -> Unit) {
@@ -110,34 +125,42 @@ class EditFragment : Fragment() {
         }
     }
 
-    private fun onClickColor(onClick: (String) -> Unit) = with(binding) {
-        val views = arrayOf(
-            aqua,
-            black,
-            blue,
-            fuchsia,
-            gray,
-            green,
-            lime,
-            maroon,
-            navy,
-            olive,
-            purple,
-            red,
-            silver,
-            teal,
-            white,
-            yellow
-        )
-        views.forEach { view ->
-            view.setOnClickListener {
-                color.setBackgroundColor(Color.parseColor(it.transitionName))
-                onClick(it.transitionName)
+    private fun onClickColor(onClick: (Int) -> Unit) = with(binding) {
+        val childCount = binding.gradLinLay.childCount
+
+        for (i in 0 until childCount) {
+            val childView = binding.gradLinLay.getChildAt(i)
+
+            childView.setOnClickListener {
+                val squareColor = getCenterColorOfSquare(it)
+                color.setBackgroundColor(squareColor)
+                onClick(squareColor)
             }
         }
     }
 
-    companion object {
-        fun newInstance() = EditFragment()
+    private fun getCenterColorOfSquare(squareView: View): Int {
+        val squareLocation = getSquareCoordinates(squareView, binding.colorsScroll)
+
+        val squareCenterX = squareLocation.first + squareView.width / 2
+        val squareCenterY = squareLocation.second + squareView.height / 2
+
+        val bgDrawable = binding.gradLinLay.background
+        val bitmap = bgDrawable.toBitmap(binding.gradLinLay.width, binding.gradLinLay.height)
+
+        return bitmap.getPixel(squareCenterX, squareCenterY)
+    }
+
+    private fun getSquareCoordinates(squareView: View, scrollView: HorizontalScrollView): Pair<Int, Int> {
+        val linearLayoutLocation = IntArray(2)
+        scrollView.getLocationInWindow(linearLayoutLocation)
+
+        val squareLocation = IntArray(2)
+        squareView.getLocationInWindow(squareLocation)
+
+        val relativeX = squareLocation[0] - linearLayoutLocation[0] + scrollView.scrollX
+        val relativeY = squareLocation[1] - linearLayoutLocation[1]
+
+        return Pair(relativeX, relativeY)
     }
 }

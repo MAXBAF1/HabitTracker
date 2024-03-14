@@ -12,7 +12,7 @@ import com.example.habitstracker.ui.global_models.Habit
 class HabitAdapter : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     var habits: List<Habit> = listOf()
 
-    class HabitHolder(item: View) : RecyclerView.ViewHolder(item) {
+    class HabitHolder(private val item: View) : RecyclerView.ViewHolder(item) {
         private val priorities = item.resources.getStringArray(R.array.Priorities)
         private val binding = HabitItemBinding.bind(item)
 
@@ -20,9 +20,15 @@ class HabitAdapter : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
             tvHabitName.text = habit.habitName
             tvDesc.text = habit.desc
             tvPriority.text = priorities[habit.priorityPos]
-            tvType.text = habit.type
+            tvType.text = item.context.getString(habit.type.strId)
             tvPeriod.text = habit.period
-            color.setBackgroundColor(Color.parseColor(habit.color))
+            color.setBackgroundColor(habit.color)
+
+            if (habit.desc.isEmpty()) tvDesc.visibility = View.GONE
+            if (habit.period.isEmpty()) {
+                tvPeriodLabel.visibility = View.GONE
+                tvPeriod.visibility = View.GONE
+            }
         }
     }
 
