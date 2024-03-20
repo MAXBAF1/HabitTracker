@@ -1,12 +1,7 @@
 package com.example.habitstracker.utils
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.fragment.app.Fragment
-import com.example.habitstracker.constance.Constance
 import java.io.Serializable
 
 inline fun <reified T : Serializable> Fragment.getSerializable(key: String): T? {

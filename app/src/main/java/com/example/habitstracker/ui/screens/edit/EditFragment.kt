@@ -14,10 +14,9 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.habitstracker.R
-import com.example.habitstracker.constance.Constance
+import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentEditBinding
 import com.example.habitstracker.ui.global_models.Habit
 import com.example.habitstracker.ui.global_models.HabitType
@@ -42,7 +41,7 @@ class EditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
-        habit = getSerializable(Constance.HABIT_KEY)
+        habit = getSerializable(Constant.HABIT_KEY)
         arguments?.clear()
 
         initPriorities(onPrioritySelected = { viewModel.obtainEvent(EditEvent.ChangePriority(it)) })
@@ -84,7 +83,7 @@ class EditFragment : Fragment() {
                 when (viewState) {
                     is EditViewState.HabitRestored -> viewState.habit?.let { initEdits(it) }
                     is EditViewState.HabitSaved -> {
-                        val bundle = bundleOf(Constance.HABIT_KEY to viewState.habit)
+                        val bundle = bundleOf(Constant.HABIT_KEY to viewState.habit)
                         navController.navigate(R.id.action_editFragment_to_homeFragment, bundle)
                     }
                 }

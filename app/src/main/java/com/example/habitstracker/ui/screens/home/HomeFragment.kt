@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habitstracker.R
-import com.example.habitstracker.constance.Constance
+import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentHomeBinding
 import com.example.habitstracker.ui.global_models.Habit
 import com.example.habitstracker.ui.screens.home.helpers.HabitAdapter
@@ -38,10 +38,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
-        val habit = getSerializable<Habit>(Constance.HABIT_KEY)
+        val habit = getSerializable<Habit>(Constant.HABIT_KEY)
 
         HabitAdapter.onItemClick = {
-            val bundle = bundleOf(Constance.HABIT_KEY to it)
+            val bundle = bundleOf(Constant.HABIT_KEY to it)
             navController.navigate(R.id.editFragment, bundle)
         }
 

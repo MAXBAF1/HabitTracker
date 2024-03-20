@@ -7,7 +7,7 @@ import com.example.habitstracker.ui.screens.home.models.HomeViewState
 import kotlinx.coroutines.flow.update
 
 class HomeViewModel : BaseViewModel<HomeViewState, HomeEvent>(initialState = HomeViewState.HabitsRestored()) {
-    private val habits: ArrayList<Habit> = arrayListOf()
+    private val habits: MutableList<Habit> = arrayListOf()
     override fun obtainEvent(viewEvent: HomeEvent) {
         when (viewEvent) {
             is HomeEvent.RestoreHabits -> {
