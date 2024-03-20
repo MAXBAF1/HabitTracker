@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Habits Tracker</string>
+    <string name="menu">Меню</string>
+
+    <!--Edit fragment-->
     <string name="habit_edit_title">Редактирование привычки</string>
     <string name="habit_name_hint">Название</string>
     <string name="habit_desc_hint">Описание</string>
@@ -17,8 +20,14 @@
     <string name="type_good">Хорошая</string>
     <string name="type_bad">Плохая</string>
 
+    <!--Drawer-->
     <string name="home">Home</string>
     <string name="inf">About as</string>
 
+    <!--About as fragment-->
     <string name="about_as">Максим Лепинских, разработано на курсе Doubletapp</string>
+
+    <!--Tabs-->
+    <string name="good">Хорошие</string>
+    <string name="bad">Плохие</string>
 </resources>

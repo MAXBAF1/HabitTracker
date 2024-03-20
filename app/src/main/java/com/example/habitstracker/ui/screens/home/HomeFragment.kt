@@ -16,11 +16,14 @@ import com.example.habitstracker.R
 import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentHomeBinding
 import com.example.habitstracker.ui.global_models.Habit
+import com.example.habitstracker.ui.global_models.HabitType
 import com.example.habitstracker.ui.screens.home.helpers.HabitAdapter
 import com.example.habitstracker.ui.screens.home.helpers.HabitDiffUtilCallback
 import com.example.habitstracker.ui.screens.home.models.HomeEvent
 import com.example.habitstracker.ui.screens.home.models.HomeViewState
 import com.example.habitstracker.utils.getSerializable
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -40,6 +43,20 @@ class HomeFragment : Fragment() {
         val navController = findNavController()
         val habit = getSerializable<Habit>(Constant.HABIT_KEY)
 
+        binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val type = when (tab?.position) {
+                    0 -> HabitType.Good
+                    1 -> HabitType.Bad
+                    else -> throw IllegalArgumentException("A new tab has not been processed")
+                }
+                viewModel.obtainEvent(HomeEvent.ChangeActiveType(type))
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+
         HabitAdapter.onItemClick = {
             val bundle = bundleOf(Constant.HABIT_KEY to it)
             navController.navigate(R.id.editFragment, bundle)
@@ -55,13 +72,21 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.getViewState().collect { viewState ->
                 when (viewState) {
-                    is HomeViewState.HabitsRestored -> updateHabits(viewState.habits)
+                    is HomeViewState.HabitsChanged -> {
+                        updateHabits(viewState.habits, viewState.toType)
+                    }
                 }
             }
         }
     }
 
-    private fun updateHabits(newHabits: List<Habit>) {
+    private fun updateHabits(newHabits: List<Habit>, toType: HabitType) {
+        val position = when (toType) {
+            HabitType.Good -> 0
+            HabitType.Bad -> 1
+        }
+        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
+
         val diffCallback = HabitDiffUtilCallback(adapter.habits, newHabits)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(adapter)
