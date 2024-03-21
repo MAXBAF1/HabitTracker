@@ -8,28 +8,24 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.habitstracker.R
 import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentHomeBinding
 import com.example.habitstracker.ui.global_models.Habit
 import com.example.habitstracker.ui.global_models.HabitType
-import com.example.habitstracker.ui.screens.home.helpers.HabitAdapter
-import com.example.habitstracker.ui.screens.home.helpers.HabitDiffUtilCallback
+import com.example.habitstracker.ui.screens.home.helpers.ViewPagerAdapter
 import com.example.habitstracker.ui.screens.home.models.HomeEvent
 import com.example.habitstracker.ui.screens.home.models.HomeViewState
 import com.example.habitstracker.utils.getSerializable
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by hiltNavGraphViewModels(R.id.navigation_graph)
     private lateinit var binding: FragmentHomeBinding
-    private val adapter = HabitAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,56 +36,47 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val navController = findNavController()
         val habit = getSerializable<Habit>(Constant.HABIT_KEY)
+        val navController = findNavController()
 
-        binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                val type = when (tab?.position) {
-                    0 -> HabitType.Good
-                    1 -> HabitType.Bad
-                    else -> throw IllegalArgumentException("A new tab has not been processed")
-                }
-                viewModel.obtainEvent(HomeEvent.ChangeActiveType(type))
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
-
-        HabitAdapter.onItemClick = {
-            val bundle = bundleOf(Constant.HABIT_KEY to it)
-            navController.navigate(R.id.editFragment, bundle)
-        }
-
-        binding.recyclerView.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.recyclerView.adapter = adapter
+        val adapter = ViewPagerAdapter { goToEditFragment(it, navController) }
+        setupViewPager(adapter)
 
         binding.fabAdd.setOnClickListener { navController.navigate(R.id.editFragment) }
 
-        viewModel.obtainEvent(HomeEvent.RestoreHabits(habit))
+        viewModel.obtainEvent(HomeEvent.RestoreHabits(newHabit = habit))
         lifecycleScope.launch {
             viewModel.getViewState().collect { viewState ->
                 when (viewState) {
                     is HomeViewState.HabitsChanged -> {
-                        updateHabits(viewState.habits, viewState.toType)
+                        adapter.habitsByType = viewState.habitsByType
+                        adapter.updateHabits(viewState.toType)
                     }
                 }
             }
         }
     }
 
-    private fun updateHabits(newHabits: List<Habit>, toType: HabitType) {
-        val position = when (toType) {
-            HabitType.Good -> 0
-            HabitType.Bad -> 1
-        }
-        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
+    private fun setupViewPager(adapter: ViewPagerAdapter) {
+        binding.viewPager.adapter = adapter
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                adapter.updateHabits(HabitType.getFromPosition(position))
+            }
+        })
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
+            val textId = when (pos) {
+                0 -> R.string.good
+                1 -> R.string.bad
+                else -> throw IllegalArgumentException("A new tab has not been processed")
+            }
+            tab.text = requireContext().getString(textId)
+        }.attach()
+    }
 
-        val diffCallback = HabitDiffUtilCallback(adapter.habits, newHabits)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        diffResult.dispatchUpdatesTo(adapter)
-        adapter.habits = newHabits
+    private fun goToEditFragment(habit: Habit, navController: NavController) {
+        val bundle = bundleOf(Constant.HABIT_KEY to habit)
+        navController.navigate(R.id.editFragment, bundle)
     }
 }

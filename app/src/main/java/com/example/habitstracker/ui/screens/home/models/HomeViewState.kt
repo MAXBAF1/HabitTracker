@@ -5,7 +5,7 @@ import com.example.habitstracker.ui.global_models.HabitType
 
 sealed class HomeViewState {
     data class HabitsChanged(
-        val habits: List<Habit> = listOf(),
-        val toType: HabitType = HabitType.Good,
+        val habitsByType: Map<HabitType, List<Habit>> = mapOf(),
+        val toType: HabitType = HabitType.Good
     ) : HomeViewState()
 }

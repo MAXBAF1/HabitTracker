@@ -1,6 +1,5 @@
 package com.example.habitstracker.ui.screens.home.helpers
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import com.example.habitstracker.R
 import com.example.habitstracker.databinding.HabitItemBinding
 import com.example.habitstracker.ui.global_models.Habit
 
-class HabitAdapter : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
+class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     var habits: List<Habit> = listOf()
 
     class HabitHolder(private val item: View) : RecyclerView.ViewHolder(item) {
@@ -41,7 +40,7 @@ class HabitAdapter : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     override fun onBindViewHolder(holder: HabitHolder, position: Int) {
         holder.bind(habits[position])
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(habits[position])
+            onHabitClick?.invoke(habits[position])
         }
     }
 
@@ -50,6 +49,6 @@ class HabitAdapter : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     }
 
     companion object {
-        var onItemClick: ((Habit) -> Unit)? = null
+        //var onItemClick: ((Habit) -> Unit)? = null
     }
 }
