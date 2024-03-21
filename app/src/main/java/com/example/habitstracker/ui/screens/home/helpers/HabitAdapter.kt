@@ -40,15 +40,11 @@ class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.A
     override fun onBindViewHolder(holder: HabitHolder, position: Int) {
         holder.bind(habits[position])
         holder.itemView.setOnClickListener {
-            onHabitClick?.invoke(habits[position])
+            onHabitClick.invoke(habits[position])
         }
     }
 
     override fun getItemCount(): Int {
         return habits.size
-    }
-
-    companion object {
-        //var onItemClick: ((Habit) -> Unit)? = null
     }
 }

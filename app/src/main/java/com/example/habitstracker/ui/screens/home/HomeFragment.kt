@@ -16,6 +16,7 @@ import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentHomeBinding
 import com.example.habitstracker.ui.global_models.Habit
 import com.example.habitstracker.ui.global_models.HabitType
+import com.example.habitstracker.ui.screens.home.helpers.HabitAdapter
 import com.example.habitstracker.ui.screens.home.helpers.ViewPagerAdapter
 import com.example.habitstracker.ui.screens.home.models.HomeEvent
 import com.example.habitstracker.ui.screens.home.models.HomeViewState
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by hiltNavGraphViewModels(R.id.navigation_graph)
     private lateinit var binding: FragmentHomeBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +41,11 @@ class HomeFragment : Fragment() {
         val habit = getSerializable<Habit>(Constant.HABIT_KEY)
         val navController = findNavController()
 
-        val adapter = ViewPagerAdapter { goToEditFragment(it, navController) }
+        val adapters = mutableMapOf(
+            HabitType.Good to HabitAdapter { goToEditFragment(it, navController) },
+            HabitType.Bad to HabitAdapter { goToEditFragment(it, navController) },
+        )
+        val adapter = ViewPagerAdapter(adapters)
         setupViewPager(adapter)
 
         binding.fabAdd.setOnClickListener { navController.navigate(R.id.editFragment) }
@@ -49,8 +55,10 @@ class HomeFragment : Fragment() {
             viewModel.getViewState().collect { viewState ->
                 when (viewState) {
                     is HomeViewState.HabitsChanged -> {
-                        adapter.habitsByType = viewState.habitsByType
-                        adapter.updateHabits(viewState.toType)
+                        if (viewState.habitsByType.isEmpty()) return@collect
+                        adapter.habitsByType.keys.forEach {
+                            adapter.habitsByType[it]?.habits = viewState.habitsByType[it]!!
+                        }
                     }
                 }
             }
@@ -59,12 +67,6 @@ class HomeFragment : Fragment() {
 
     private fun setupViewPager(adapter: ViewPagerAdapter) {
         binding.viewPager.adapter = adapter
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                adapter.updateHabits(HabitType.getFromPosition(position))
-            }
-        })
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
             val textId = when (pos) {
                 0 -> R.string.good
