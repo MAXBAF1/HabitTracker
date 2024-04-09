@@ -1,6 +1,5 @@
 package com.example.habitstracker.ui.screens.edit
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +17,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.habitstracker.R
 import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentEditBinding
-import com.example.habitstracker.ui.global_models.Habit
-import com.example.habitstracker.ui.global_models.HabitType
+import com.example.habitstracker.ui.common.models.Habit
+import com.example.habitstracker.ui.common.models.HabitType
 import com.example.habitstracker.ui.screens.edit.models.EditEvent
 import com.example.habitstracker.ui.screens.edit.models.EditViewState
 import com.example.habitstracker.ui.screens.edit.models.FieldType
@@ -73,11 +72,7 @@ class EditFragment : Fragment() {
             }
         }
 
-        viewModel.obtainEvent(
-            EditEvent.RestoreEdits(
-                habit ?: Habit("", "", 0, HabitType.Good, "", "", Color.BLACK), habit != null
-            )
-        )
+        viewModel.obtainEvent(EditEvent.RestoreEdits(habit ?: Habit(), habit != null))
         lifecycleScope.launch {
             viewModel.getViewState().collect { viewState ->
                 when (viewState) {
@@ -151,7 +146,10 @@ class EditFragment : Fragment() {
         return bitmap.getPixel(squareCenterX, squareCenterY)
     }
 
-    private fun getSquareCoordinates(squareView: View, scrollView: HorizontalScrollView): Pair<Int, Int> {
+    private fun getSquareCoordinates(
+        squareView: View,
+        scrollView: HorizontalScrollView,
+    ): Pair<Int, Int> {
         val linearLayoutLocation = IntArray(2)
         scrollView.getLocationInWindow(linearLayoutLocation)
 

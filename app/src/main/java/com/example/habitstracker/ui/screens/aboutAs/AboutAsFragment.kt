@@ -21,8 +21,4 @@ class AboutAsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     }
-
-    companion object {
-        fun newInstance() = AboutAsFragment()
-    }
 }

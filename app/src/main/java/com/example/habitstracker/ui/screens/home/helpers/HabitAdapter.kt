@@ -1,15 +1,14 @@
 package com.example.habitstracker.ui.screens.home.helpers
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habitstracker.R
 import com.example.habitstracker.databinding.HabitItemBinding
-import com.example.habitstracker.ui.global_models.Habit
+import com.example.habitstracker.ui.common.models.Habit
 
-class HabitAdapter : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
+class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     var habits: List<Habit> = listOf()
 
     class HabitHolder(private val item: View) : RecyclerView.ViewHolder(item) {
@@ -34,22 +33,17 @@ class HabitAdapter : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.habit_item, parent, false)
-
         return HabitHolder(view)
     }
 
     override fun onBindViewHolder(holder: HabitHolder, position: Int) {
         holder.bind(habits[position])
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(habits[position])
+            onHabitClick.invoke(habits[position])
         }
     }
 
     override fun getItemCount(): Int {
         return habits.size
-    }
-
-    companion object {
-        var onItemClick: ((Habit) -> Unit)? = null
     }
 }

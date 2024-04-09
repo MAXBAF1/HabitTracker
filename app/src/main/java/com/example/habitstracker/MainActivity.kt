@@ -1,13 +1,11 @@
 package com.example.habitstracker
 
 import android.os.Bundle
-import androidx.activity.viewModels
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.example.habitstracker.databinding.ActivityMainBinding
-import com.example.habitstracker.ui.screens.edit.EditFragment
-import com.example.habitstracker.ui.screens.home.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,23 +20,40 @@ class MainActivity : AppCompatActivity() {
         initNavView()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu -> {
+                if (binding.drawer.isOpen) binding.drawer.close() else binding.drawer.open()
+            }
+        }
+        return true
+    }
+
     private fun initNavView() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.place_holder) as NavHostFragment
         val navController = navHostFragment.navController
 
-        binding.navView.setNavigationItemSelectedListener {
+        binding.drawerNavView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
-                    binding.drawer.closeDrawers()
-                    navController.navigate(R.id.homeFragment)
+                    if (navController.currentDestination?.id != R.id.homeFragment) {
+                        navController.navigate(R.id.action_aboutAsFragment_to_homeFragment)
+                    }
                 }
 
                 R.id.inf -> {
-                    binding.drawer.closeDrawers()
-                    navController.navigate(R.id.aboutAsFragment)
+                    if (navController.currentDestination?.id != R.id.aboutAsFragment) {
+                        navController.navigate(R.id.aboutAsFragment)
+                    }
                 }
             }
+            binding.drawer.close()
             true
         }
     }

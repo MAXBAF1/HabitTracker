@@ -1,7 +1,9 @@
 package com.example.habitstracker.utils
 
 import android.os.Build
+import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import java.io.Serializable
 
 inline fun <reified T : Serializable> Fragment.getSerializable(key: String): T? {
@@ -10,6 +12,10 @@ inline fun <reified T : Serializable> Fragment.getSerializable(key: String): T? 
     } else {
         arguments?.getSerializable(key) as T?
     }
+}
+
+fun NavController.navigateTo(destinationId: Int, bundle: Bundle) {
+
 }
 
 /*
