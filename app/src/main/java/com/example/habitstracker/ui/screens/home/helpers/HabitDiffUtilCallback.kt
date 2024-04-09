@@ -1,7 +1,7 @@
 package com.example.habitstracker.ui.screens.home.helpers
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.habitstracker.ui.global_models.Habit
+import com.example.habitstracker.ui.common.models.Habit
 
 class HabitDiffUtilCallback(
     private val oldList: List<Habit>,

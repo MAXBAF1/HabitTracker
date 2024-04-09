@@ -1,7 +1,7 @@
 package com.example.habitstracker.ui.screens.edit
 
 import com.example.habitstracker.ui.BaseViewModel
-import com.example.habitstracker.ui.global_models.Habit
+import com.example.habitstracker.ui.common.models.Habit
 import com.example.habitstracker.ui.screens.edit.models.EditEvent
 import com.example.habitstracker.ui.screens.edit.models.EditViewState
 import com.example.habitstracker.ui.screens.edit.models.FieldType

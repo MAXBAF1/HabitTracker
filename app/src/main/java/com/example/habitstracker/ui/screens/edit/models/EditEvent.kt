@@ -1,7 +1,7 @@
 package com.example.habitstracker.ui.screens.edit.models
 
-import com.example.habitstracker.ui.global_models.Habit
-import com.example.habitstracker.ui.global_models.HabitType
+import com.example.habitstracker.ui.common.models.Habit
+import com.example.habitstracker.ui.common.models.HabitType
 
 sealed class EditEvent {
     data class RestoreEdits(val habit: Habit?, val isEdit: Boolean) : EditEvent()

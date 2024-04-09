@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habitstracker.R
-import com.example.habitstracker.ui.global_models.HabitType
+import com.example.habitstracker.ui.common.models.HabitType
 
 class ViewPagerAdapter(
     var habitsByType: MutableMap<HabitType, HabitAdapter> = mutableMapOf(),

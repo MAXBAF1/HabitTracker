@@ -1,4 +1,4 @@
-package com.example.habitstracker.ui.global_models
+package com.example.habitstracker.ui.common.models
 
 import com.example.habitstracker.R
 

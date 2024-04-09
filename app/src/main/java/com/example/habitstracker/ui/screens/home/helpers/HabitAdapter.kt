@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habitstracker.R
 import com.example.habitstracker.databinding.HabitItemBinding
-import com.example.habitstracker.ui.global_models.Habit
+import com.example.habitstracker.ui.common.models.Habit
 
 class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     var habits: List<Habit> = listOf()
@@ -33,7 +33,6 @@ class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.A
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.habit_item, parent, false)
-
         return HabitHolder(view)
     }
 

@@ -10,12 +10,11 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.example.habitstracker.R
 import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentHomeBinding
-import com.example.habitstracker.ui.global_models.Habit
-import com.example.habitstracker.ui.global_models.HabitType
+import com.example.habitstracker.ui.common.models.Habit
+import com.example.habitstracker.ui.common.models.HabitType
 import com.example.habitstracker.ui.screens.home.helpers.HabitAdapter
 import com.example.habitstracker.ui.screens.home.helpers.ViewPagerAdapter
 import com.example.habitstracker.ui.screens.home.models.HomeEvent
@@ -27,7 +26,6 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by hiltNavGraphViewModels(R.id.navigation_graph)
     private lateinit var binding: FragmentHomeBinding
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
