@@ -3,10 +3,15 @@ package com.example.habitstracker
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.fragment.NavHostFragment
 import com.example.habitstracker.databinding.ActivityMainBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -18,6 +23,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initNavView()
+        initBottomSheet()
+    }
+
+    private fun initBottomSheet() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetInclude.bottomSheet)
+        binding.bottomSheetInclude.bottomSheet.findViewById<FragmentContainerView>(R.id.innerFragmentPlaceHolder)
+        //bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        //bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        //bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        bottomSheetBehavior.peekHeight = 340
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
