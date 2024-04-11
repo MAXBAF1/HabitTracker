@@ -7,18 +7,41 @@ import com.example.habitstracker.ui.screens.home.models.HomeEvent
 import com.example.habitstracker.ui.screens.home.models.HomeViewState
 import kotlinx.coroutines.flow.update
 
-class HomeViewModel :
-    BaseViewModel<HomeViewState, HomeEvent>(initialState = HomeViewState.HabitsChanged()) {
+class HomeViewModel : BaseViewModel<HomeViewState, HomeEvent>(initialState = HomeViewState()) {
     private val habitsByType: Map<HabitType, MutableList<Habit>> = mapOf(
         HabitType.Good to mutableListOf(),
         HabitType.Bad to mutableListOf(),
     )
 
+    private var searchText = ""
+
+
     override fun obtainEvent(viewEvent: HomeEvent) {
         when (viewEvent) {
             is HomeEvent.RestoreHabits -> restoreHabits(viewEvent.newHabit)
+            is HomeEvent.ChangeSearchFilterText -> updateWithVisibleHabits(viewEvent.text)
         }
     }
+
+    private fun updateWithVisibleHabits(name: String? = null) {
+        var visibleHabitsByType: Map<HabitType, MutableList<Habit>> = mapOf(
+            HabitType.Good to mutableListOf(),
+            HabitType.Bad to mutableListOf(),
+        )
+        if (searchText.isNotBlank() || !name.isNullOrBlank()) {
+            if (name != null) searchText = name
+            habitsByType.keys.forEach { type ->
+                habitsByType[type]?.forEach {
+                    if (it.habitName.contains(searchText)) visibleHabitsByType[type]?.add(it)
+                }
+            }
+        } else visibleHabitsByType = habitsByType
+
+        viewState.update {
+            it.copy(habitsByType = visibleHabitsByType, searchText = searchText)
+        }
+    }
+
 
     private fun restoreHabits(newHabit: Habit?) {
         if (newHabit == null || !habitsByType.containsKey(newHabit.type)) return
@@ -39,6 +62,6 @@ class HomeViewModel :
             habitsByType[newHabit.type]?.add(newHabit)
         }
 
-        viewState.update { HomeViewState.HabitsChanged(habitsByType, newHabit.type) }
+        updateWithVisibleHabits()
     }
 }

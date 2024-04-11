@@ -4,14 +4,14 @@ import android.graphics.Color
 import java.util.UUID
 
 data class Habit(
+    val id: UUID = UUID.randomUUID(),
     var habitName: String = "",
     var desc: String = "",
     var priorityPos: Int = 0,
     var type: HabitType = HabitType.Good,
     var period: String = "",
     var repeatCnt: String = "",
-    var color: Int = Color.BLACK,
-    val id: UUID = UUID.randomUUID(),
+    var color: Int = Color.BLACK
 ) : java.io.Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

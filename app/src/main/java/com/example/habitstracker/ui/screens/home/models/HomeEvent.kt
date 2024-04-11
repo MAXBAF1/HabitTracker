@@ -4,4 +4,5 @@ import com.example.habitstracker.ui.common.models.Habit
 
 sealed class HomeEvent {
     data class RestoreHabits(val newHabit: Habit?) : HomeEvent()
+    data class ChangeSearchFilterText(val text: String) : HomeEvent()
 }

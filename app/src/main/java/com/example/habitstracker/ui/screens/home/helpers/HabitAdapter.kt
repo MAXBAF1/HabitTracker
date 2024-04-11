@@ -37,9 +37,11 @@ class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: HabitHolder, position: Int) {
-        holder.bind(habits[position])
+        val habit = habits[position]
+
+        holder.bind(habit)
         holder.itemView.setOnClickListener {
-            onHabitClick.invoke(habits[position])
+            onHabitClick.invoke(habit)
         }
     }
 

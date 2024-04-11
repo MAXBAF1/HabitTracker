@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -20,6 +23,7 @@ import com.example.habitstracker.ui.screens.home.helpers.ViewPagerAdapter
 import com.example.habitstracker.ui.screens.home.models.HomeEvent
 import com.example.habitstracker.ui.screens.home.models.HomeViewState
 import com.example.habitstracker.utils.getSerializable
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
@@ -38,7 +42,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val habit = getSerializable<Habit>(Constant.HABIT_KEY)
         val navController = findNavController()
-
+        initBottomSheet()
         val adapters = mutableMapOf(
             HabitType.Good to HabitAdapter { goToEditFragment(it, navController) },
             HabitType.Bad to HabitAdapter { goToEditFragment(it, navController) },
@@ -51,15 +55,17 @@ class HomeFragment : Fragment() {
         viewModel.obtainEvent(HomeEvent.RestoreHabits(newHabit = habit))
         lifecycleScope.launch {
             viewModel.getViewState().collect { viewState ->
-                when (viewState) {
-                    is HomeViewState.HabitsChanged -> {
-                        if (viewState.habitsByType.isEmpty()) return@collect
-                        adapter.habitsByType.keys.forEach {
-                            adapter.habitsByType[it]?.habits = viewState.habitsByType[it]!!
-                        }
-                    }
+                if (viewState.habitsByType.isEmpty()) return@collect
+                adapter.habitsByType.keys.forEach {
+                    adapter.habitsByType[it]?.habits = viewState.habitsByType[it]!!
                 }
             }
+        }
+    }
+
+    private fun initBottomSheet() {
+        binding.fabFilter.setOnClickListener {
+            BottomFragment().show(parentFragmentManager, "tag")
         }
     }
 
