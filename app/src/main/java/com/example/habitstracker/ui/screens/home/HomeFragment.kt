@@ -4,28 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.habitstracker.R
 import com.example.habitstracker.constance.Constant
 import com.example.habitstracker.databinding.FragmentHomeBinding
 import com.example.habitstracker.ui.common.models.Habit
-import com.example.habitstracker.ui.common.models.HabitType
-import com.example.habitstracker.ui.screens.home.helpers.HabitAdapter
-import com.example.habitstracker.ui.screens.home.helpers.ViewPagerAdapter
+import com.example.habitstracker.ui.screens.home.helpers.HabitListAdapter
 import com.example.habitstracker.ui.screens.home.models.HomeEvent
-import com.example.habitstracker.ui.screens.home.models.HomeViewState
 import com.example.habitstracker.utils.getSerializable
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by hiltNavGraphViewModels(R.id.navigation_graph)
@@ -43,24 +33,12 @@ class HomeFragment : Fragment() {
         val habit = getSerializable<Habit>(Constant.HABIT_KEY)
         val navController = findNavController()
         initBottomSheet()
-        val adapters = mutableMapOf(
-            HabitType.Good to HabitAdapter { goToEditFragment(it, navController) },
-            HabitType.Bad to HabitAdapter { goToEditFragment(it, navController) },
-        )
-        val adapter = ViewPagerAdapter(adapters)
+        val adapter = HabitListAdapter(this)
         setupViewPager(adapter)
 
         binding.fabAdd.setOnClickListener { navController.navigate(R.id.editFragment) }
 
         viewModel.obtainEvent(HomeEvent.RestoreHabits(newHabit = habit))
-        lifecycleScope.launch {
-            viewModel.getViewState().collect { viewState ->
-                if (viewState.habitsByType.isEmpty()) return@collect
-                adapter.habitsByType.keys.forEach {
-                    adapter.habitsByType[it]?.habits = viewState.habitsByType[it]!!
-                }
-            }
-        }
     }
 
     private fun initBottomSheet() {
@@ -69,7 +47,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupViewPager(adapter: ViewPagerAdapter) {
+    private fun setupViewPager(adapter: FragmentStateAdapter) {
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
             val textId = when (pos) {
@@ -79,10 +57,5 @@ class HomeFragment : Fragment() {
             }
             tab.text = requireContext().getString(textId)
         }.attach()
-    }
-
-    private fun goToEditFragment(habit: Habit, navController: NavController) {
-        val bundle = bundleOf(Constant.HABIT_KEY to habit)
-        navController.navigate(R.id.editFragment, bundle)
     }
 }

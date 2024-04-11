@@ -8,7 +8,8 @@ import com.example.habitstracker.R
 import com.example.habitstracker.databinding.HabitItemBinding
 import com.example.habitstracker.ui.common.models.Habit
 
-class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
+class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) :
+    RecyclerView.Adapter<HabitAdapter.HabitHolder>() {
     var habits: List<Habit> = listOf()
 
     class HabitHolder(private val item: View) : RecyclerView.ViewHolder(item) {
@@ -40,9 +41,7 @@ class HabitAdapter(private val onHabitClick: ((Habit) -> Unit)) : RecyclerView.A
         val habit = habits[position]
 
         holder.bind(habit)
-        holder.itemView.setOnClickListener {
-            onHabitClick.invoke(habit)
-        }
+        holder.itemView.setOnClickListener { onHabitClick.invoke(habit) }
     }
 
     override fun getItemCount(): Int {
